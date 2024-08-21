@@ -1,12 +1,16 @@
 package br.com.alura.screenmatch;
 
 import br.com.alura.screenmatch.model.Episodes;
+import br.com.alura.screenmatch.model.Seasons;
 import br.com.alura.screenmatch.model.Series;
 import br.com.alura.screenmatch.service.ConsumeApi;
 import br.com.alura.screenmatch.service.ConvertsData;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 public class ScreenmatchApplication implements CommandLineRunner {
@@ -28,5 +32,14 @@ public class ScreenmatchApplication implements CommandLineRunner {
 
 		Episodes episodes = convertsData.getData(dataEpisodes, Episodes.class);
 		System.out.println(episodes);
+
+		List<Seasons> seasonsList = new ArrayList<>();
+
+		for(int i = 1; i<=series.seasons(); i++) {
+			String result = consumeApi.getData("https://www.omdbapi.com/?t=gilmore+girls&season=" + i + "&apikey=6585022c");
+			seasonsList.add(convertsData.getData(result, Seasons.class));
+		}
+
+		seasonsList.forEach(System.out::println);
 	}
 }
