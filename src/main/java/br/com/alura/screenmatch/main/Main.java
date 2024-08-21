@@ -7,8 +7,10 @@ import br.com.alura.screenmatch.service.ConsumeApi;
 import br.com.alura.screenmatch.service.ConvertsData;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -37,11 +39,15 @@ public class Main {
 
         seasonsList.forEach(System.out::println);
 
-        seasonsList.forEach(episode -> {
-            episode.episodes().forEach(item -> {
-                System.out.println(item.title());
-            });
-        });
+        seasonsList.forEach(episode -> episode.episodes().forEach(item -> System.out.println(item.title())));
+
+        seasonsList.stream()
+                .flatMap(s -> s.episodes().stream())
+                .filter(s -> !s.assessment().equals("N/A"))
+                .sorted(Comparator.comparing(Episodes::assessment).reversed())
+                .limit(5)
+                .forEach(System.out::println);
+
     }
 
 }
