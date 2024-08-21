@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch.main;
 
+import br.com.alura.screenmatch.model.Episodes;
 import br.com.alura.screenmatch.model.Seasons;
 import br.com.alura.screenmatch.model.Series;
 import br.com.alura.screenmatch.service.ConsumeApi;
@@ -35,6 +36,12 @@ public class Main {
         }
 
         seasonsList.forEach(System.out::println);
+
+        seasonsList.forEach(episode -> {
+            episode.episodes().forEach(item -> {
+                System.out.println(item.title());
+            });
+        });
     }
 
 }
