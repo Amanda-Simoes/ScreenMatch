@@ -8,10 +8,8 @@ import br.com.alura.screenmatch.service.ConvertsData;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -58,27 +56,32 @@ public class Main {
 
         episodeList.forEach(System.out::println);
 
-        System.out.println("Digite um trecho do titulo do episodio: ");
-        String titleExcerpt = reading.nextLine();
+//        System.out.println("Digite um trecho do titulo do episodio: ");
+//        String titleExcerpt = reading.nextLine();
+//
+//        Optional<Episode> optionalEpisode = episodeList.stream()
+//                .filter(e -> e.getTitle().contains(titleExcerpt))
+//                .findFirst();
+//
+//        if (optionalEpisode.isPresent()) {
+//            System.out.println(optionalEpisode);
+//        }
 
-        Optional<Episode> optionalEpisode = episodeList.stream()
-                .filter(e -> e.getTitle().contains(titleExcerpt))
-                .findFirst();
+//        System.out.println("A partir de que ano você deseja ver os episódios? ");
+//        int ano = reading.nextInt();
+//
+//        LocalDate findDate = LocalDate.of(ano, 1, 1);
+//
+//        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//        episodeList.stream()
+//                .filter(e -> e.getReleaseDate() != null && e.getReleaseDate().isAfter(findDate))
+//                .forEach(e -> System.out.println("Temporada: " + e.getSeason() + " - Episodio: " + e.getTitle() + " - Lançamento: " + e.getReleaseDate().format(dateTimeFormatter)));
 
-        if (optionalEpisode.isPresent()) {
-            System.out.println(optionalEpisode);
-        }
+        Map<Integer, Double> ratingsBySeason = episodeList.stream()
+                .filter(e -> e.getAssessment() != 0)
+                .collect(Collectors.groupingBy(Episode::getSeason, Collectors.averagingDouble(Episode::getAssessment)));
 
-        System.out.println("A partir de que ano você deseja ver os episódios? ");
-        int ano = reading.nextInt();
-
-        LocalDate findDate = LocalDate.of(ano, 1, 1);
-
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        episodeList.stream()
-                .filter(e -> e.getReleaseDate() != null && e.getReleaseDate().isAfter(findDate))
-                .forEach(e -> System.out.println("Temporada: " + e.getSeason() + " - Episodio: " + e.getTitle() + " - Lançamento: " + e.getReleaseDate().format(dateTimeFormatter)));
-
+        System.out.println(ratingsBySeason);
     }
 
 }
