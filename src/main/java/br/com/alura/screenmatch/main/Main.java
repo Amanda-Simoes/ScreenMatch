@@ -47,8 +47,10 @@ public class Main {
         seasonsList.stream()
                 .flatMap(s -> s.episodes().stream())
                 .filter(s -> !s.assessment().equals("N/A"))
+                .peek(e -> System.out.println("First filter (N/A)" + e))
                 .sorted(Comparator.comparing(Episodes::assessment).reversed())
                 .limit(5)
+                .map(e -> e.title().toUpperCase())
                 .forEach(System.out::println);
 
         List<Episode> episodeList = seasonsList.stream()
@@ -66,9 +68,7 @@ public class Main {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         episodeList.stream()
                 .filter(e -> e.getReleaseDate() != null && e.getReleaseDate().isAfter(findDate))
-                .forEach(e -> {
-                    System.out.println("Temporada: " + e.getSeason() + " - Episodio: " + e.getTitle() + " - Lançamento: " + e.getReleaseDate().format(dateTimeFormatter));
-                });
+                .forEach(e -> System.out.println("Temporada: " + e.getSeason() + " - Episodio: " + e.getTitle() + " - Lançamento: " + e.getReleaseDate().format(dateTimeFormatter)));
 
     }
 
