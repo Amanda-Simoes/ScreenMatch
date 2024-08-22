@@ -1,7 +1,6 @@
 package br.com.alura.screenmatch.main;
 
 import br.com.alura.screenmatch.model.Episode;
-import br.com.alura.screenmatch.model.Episodes;
 import br.com.alura.screenmatch.model.Seasons;
 import br.com.alura.screenmatch.model.Series;
 import br.com.alura.screenmatch.service.ConsumeApi;
@@ -10,10 +9,9 @@ import br.com.alura.screenmatch.service.ConvertsData;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Main {
 
@@ -44,21 +42,32 @@ public class Main {
 
         seasonsList.forEach(episode -> episode.episodes().forEach(item -> System.out.println(item.title())));
 
-        seasonsList.stream()
-                .flatMap(s -> s.episodes().stream())
-                .filter(s -> !s.assessment().equals("N/A"))
-                .peek(e -> System.out.println("First filter (N/A)" + e))
-                .sorted(Comparator.comparing(Episodes::assessment).reversed())
-                .limit(5)
-                .map(e -> e.title().toUpperCase())
-                .forEach(System.out::println);
-
+//        seasonsList.stream()
+//                .flatMap(s -> s.episodes().stream())
+//                .filter(s -> !s.assessment().equals("N/A"))
+//                .peek(e -> System.out.println("First filter (N/A)" + e))
+//                .sorted(Comparator.comparing(Episodes::assessment).reversed())
+//                .limit(5)
+//                .map(e -> e.title().toUpperCase())
+//                .forEach(System.out::println);
+//
         List<Episode> episodeList = seasonsList.stream()
                 .flatMap(s -> s.episodes().stream()
                         .map(d -> new Episode(s.season(), d)))
                 .toList();
 
         episodeList.forEach(System.out::println);
+
+        System.out.println("Digite um trecho do titulo do episodio: ");
+        String titleExcerpt = reading.nextLine();
+
+        Optional<Episode> optionalEpisode = episodeList.stream()
+                .filter(e -> e.getTitle().contains(titleExcerpt))
+                .findFirst();
+
+        if (optionalEpisode.isPresent()) {
+            System.out.println(optionalEpisode);
+        }
 
         System.out.println("A partir de que ano você deseja ver os episódios? ");
         int ano = reading.nextInt();
